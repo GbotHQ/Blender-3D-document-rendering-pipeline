@@ -4,6 +4,7 @@ Scene parameters and render settings are written to a conf.json file that is rea
 - ### General
     - resolution: The output resolution
     - render_engine: Which Blender render engine to use
+    - compression_ratio: PNG compression ratio %
     - cycles_device: Either cpu or gpu
     - cycles_samples: Path tracing samples
     - cycles_denoise: Use cycles denoising

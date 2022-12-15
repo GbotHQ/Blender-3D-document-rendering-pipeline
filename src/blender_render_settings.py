@@ -13,6 +13,7 @@ def warn_about_device_fallback(device, device_to_fallback_to):
 data = bpy.data
 scene = data.scenes["Scene"]
 scene_renderer = scene.render
+file_output = scene.node_tree.nodes["File Output"]
 renderer = bpy.ops.render
 hdri = data.worlds["World"].node_tree.nodes["Background"]
 hdri_image = bpy.data.images["hdri"]
@@ -99,11 +100,20 @@ class RenderSettings:
 
     @property
     def output_path(self):
-        return scene.node_tree.nodes["File Output"].base_path
+        return file_output.base_path
 
     @output_path.setter
     def output_path(self, path):
-        scene.node_tree.nodes["File Output"].base_path = path
+        file_output.base_path = path
+
+    @property
+    def compression_ratio(self):
+        return file_output.file_slots['image'].format.compression
+
+    @compression_ratio.setter
+    def compression_ratio(self, ratio):
+        file_output.file_slots['image'].format.compression = ratio
+        file_output.file_slots['coordinates'].format.compression = ratio
 
     @property
     def current_frame(self):

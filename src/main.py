@@ -45,6 +45,7 @@ def default_generator(index):
 
     general_conf = {}
     general_conf["resolution"] = (1024, 1024)
+    general_conf["compression_ratio"] = 70
     general_conf["render_engine"] = "cycles"
     general_conf["cycles_device"] = "gpu"
     general_conf["cycles_samples"] = 0.87
@@ -200,6 +201,7 @@ def generate_and_render(conf):
     render_settings.current_frame = 1
 
     render_settings.output_path = conf["general"]["output_path"]
+    render_settings.compression_ratio = conf["general"]["compression_ratio"]
     render_settings.render_resolution = conf["general"]["resolution"]
 
     # change render engine to cycles, change to using specified device and change sampling settings
