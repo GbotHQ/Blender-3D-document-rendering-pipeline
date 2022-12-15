@@ -34,7 +34,9 @@ import paper_parameters
 # importlib.reload(paper_parameters)
 
 
-def default_generator(index):
+def generator(index):
+    """See parameters.md for more info"""
+
     output_path = pth(project_path, "renders")
     assets_path = ppth(project_path, "test_assets")
     texture_path_base = ppth(assets_path, "WoodenPlanks05_MR_2K")
@@ -48,7 +50,7 @@ def default_generator(index):
     general_conf["compression_ratio"] = 70
     general_conf["render_engine"] = "cycles"
     general_conf["cycles_device"] = "gpu"
-    general_conf["cycles_samples"] = 0.87
+    general_conf["cycles_samples"] = 8
     general_conf["cycles_denoise"] = True
     general_conf["output_path"] = str(output_path)
 
@@ -89,7 +91,7 @@ def default_generator(index):
 
     camera_conf = {}
     camera_conf["focal_length"] = randint(24, 135)
-    camera_conf["relative_camera_distance"] = 1.4
+    camera_conf["relative_camera_distance"] = 1.3
     camera_conf["depth_of_field"] = True
     camera_conf["fstop"] = uniform(0.8, 1.8)
     camera_conf["orbit"] = (uniform(0, 25), uniform(0, 360))
@@ -97,7 +99,7 @@ def default_generator(index):
 
     hdri_conf = {}
     hdri_conf["hdri_image_path"] = str(assets_path / "canary_wharf_2k.exr")
-    hdri_conf["hdri_strength"] = uniform(0.02, 0.12)
+    hdri_conf["hdri_strength"] = uniform(0.02, 0.2)
     hdri_conf["hdri_image_rotation"] = uniform(0, 360)
 
     lights_conf = []
@@ -109,7 +111,7 @@ def default_generator(index):
         light["orbit"] = uniform(0, 45), uniform(0, 360)
         light["look_at_2d"] = uniform(-0.4, 0.4), uniform(-0.4, 0.4)
 
-        light["power"] = uniform(300, 800)
+        light["power"] = uniform(500, 900)
         light["shadow_softness_radius"] = uniform(0.1, 0.8)
         light["light_cone_angle"] = uniform(30, 90)
 

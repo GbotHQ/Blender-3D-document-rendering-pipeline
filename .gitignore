@@ -1,3 +1,4 @@
 conf.json
 src/__pycache__
 renders/*
+*.blend1
