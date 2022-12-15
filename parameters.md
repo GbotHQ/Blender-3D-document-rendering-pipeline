@@ -51,4 +51,5 @@ Scene parameters and render settings are written to a conf.json file that is rea
     - look_at_2d: The look-at position on scene XY axes
     - power: Light power (intensity) in watts
     - shadow_softness_radius: Light radius for controlling shadow softness
+    - light_cone_angle: Spotlight cone angle
     - color: Light color
