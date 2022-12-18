@@ -231,7 +231,7 @@ def check_config_validity(samples):
             if key not in allowed_keys:
                 raise InvalidKeyInConfig(key)
 
-    sample_conf = default_generator(0)
+    sample_conf = generator(0)
     for conf in samples:
         check_allowed_keys(conf.keys(), sample_conf.keys())
         # check subkeys
@@ -250,7 +250,7 @@ if __name__ == "__main__":
     check_config_validity(samples)
 
     for i, conf in enumerate(samples):
-        default_conf = default_generator(i)
+        default_conf = generator(i)
 
         # merge configs
         default_conf.update(conf)
