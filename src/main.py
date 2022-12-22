@@ -96,7 +96,7 @@ def generator(index):
     camera_conf["focal_length"] = randint(24, 135)
     camera_conf["relative_camera_distance"] = 1.3
     camera_conf["depth_of_field"] = True
-    camera_conf["fstop"] = uniform(0.8, 1.8)
+    camera_conf["fstop"] = uniform(1.0, 4.0)
     camera_conf["orbit"] = (uniform(0, 25), uniform(0, 360))
     camera_conf["look_at_2d"] = (0, 0)
 
