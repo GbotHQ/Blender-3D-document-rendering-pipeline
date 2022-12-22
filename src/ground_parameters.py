@@ -19,6 +19,16 @@ class Ground:
         self.obj = data.objects["ground_plane"]
 
     @property
+    def visible(self):
+        return not self.obj.hide_render
+
+    @visible.setter
+    def visible(self, visible):
+        hide = not visible
+        self.obj.hide_render = hide
+        self.obj.hide_viewport = hide
+
+    @property
     def displacement_strength(self):
         return scene["ground_plane_displacement"]
 

@@ -37,6 +37,8 @@ import paper_parameters
 def generator(index):
     """See parameters.md for more info"""
 
+    ground_visible = random() > 0.3
+
     output_path = pth(project_path, "renders")
     assets_path = ppth(project_path, "test_assets")
     texture_path_base = ppth(assets_path, "WoodenPlanks05_MR_2K")
@@ -55,6 +57,7 @@ def generator(index):
     general_conf["output_path"] = str(output_path)
 
     ground_conf = {}
+    ground_conf["visible"] = ground_visible
     ground_conf["offset"] = uniform(-10, 10)
     ground_conf["texture_rotation"] = uniform(0, 360)
     ground_conf["displacement_strength"] = uniform(0.04, 0.2)
@@ -99,7 +102,8 @@ def generator(index):
 
     hdri_conf = {}
     hdri_conf["hdri_image_path"] = str(assets_path / "canary_wharf_2k.exr")
-    hdri_conf["hdri_strength"] = uniform(0.02, 0.2)
+    hdri_conf["hdri_light_strength"] = uniform(0.02, 0.2)
+    hdri_conf["hdri_backdrop_strength"] = 1.0
     hdri_conf["hdri_image_rotation"] = uniform(0, 360)
 
     lights_conf = []
@@ -143,10 +147,13 @@ def generator(index):
 def generate_and_render(conf):
     # ground parameters
     ground = ground_parameters.Ground()
-    ground.offset = conf["ground"]["offset"]
-    ground.texture_rotation = conf["ground"]["texture_rotation"]
-    ground.displacement_strength = conf["ground"]["displacement_strength"]
-    ground.subdivisions = conf["ground"]["subdivisions"]
+    ground.visible = conf["ground"]["visible"]
+
+    if conf["ground"]["visible"]:
+        ground.offset = conf["ground"]["offset"]
+        ground.texture_rotation = conf["ground"]["texture_rotation"]
+        ground.displacement_strength = conf["ground"]["displacement_strength"]
+        ground.subdivisions = conf["ground"]["subdivisions"]
 
     # load textures
     for type in ("albedo", "roughness", "depth"):
@@ -182,6 +189,9 @@ def generate_and_render(conf):
     for light, light_conf in zip(lights, conf["lights"]):
         light.visible = light_conf["visible"]
 
+        if not light_conf["visible"]:
+            continue
+
         light.distance = light_conf["distance"]
         light.orbit(*light_conf["orbit"])
         light.look_at_2d(*light_conf["look_at_2d"])
@@ -196,7 +206,8 @@ def generate_and_render(conf):
     render_settings = blender_render_settings.RenderSettings()
 
     render_settings.hdri_image_path = conf["hdri"]["hdri_image_path"]
-    render_settings.hdri_strength = conf["hdri"]["hdri_strength"]
+    render_settings.hdri_light_strength = conf["hdri"]["hdri_light_strength"]
+    render_settings.hdri_backdrop_strength = conf["hdri"]["hdri_backdrop_strength"]
     render_settings.hdri_image_rotation = conf["hdri"]["hdri_image_rotation"]
 
     # jump to the first frame
