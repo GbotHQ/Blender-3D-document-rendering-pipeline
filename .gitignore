@@ -1,4 +1,5 @@
-conf.json
+config/*
+src/test.ipynb
 src/__pycache__
 renders/*
 *.blend1

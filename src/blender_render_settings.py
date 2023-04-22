@@ -57,14 +57,13 @@ def change_render_engine_cycles(cycles_device, cycles_samples, cycles_denoise):
     cycles.preview_samples = cycles_samples
     cycles.use_denoising = cycles_denoise
 
-    if cycles_device == "gpu":
-        if not enable_gpu():
-            cycles_device = "cpu"
+    if cycles_device == "gpu" and not enable_gpu():
+        cycles_device = "cpu"
 
     if cycles_device == "cpu":
         cycles.device = "CPU"
     elif cycles_device != "gpu":
-        raise Exception(f"{cycles_device} is not a valid device")
+        raise ValueError(f"{cycles_device} is not a valid device")
 
 
 class RenderSettings:
@@ -88,16 +87,14 @@ class RenderSettings:
         cycles_denoise=True,
     ):
         if render_engine == "cycles":
-            change_render_engine_cycles(
-                cycles_device, cycles_samples, cycles_denoise
-            )
+            change_render_engine_cycles(cycles_device, cycles_samples, cycles_denoise)
             scene_renderer.engine = "CYCLES"
         elif render_engine == "eevee":
             scene_renderer.engine = "BLENDER_EEVEE"
         elif render_engine == "workbench":
             scene_renderer.engine = "BLENDER_WORKBENCH"
         else:
-            raise Exception(f"{render_engine} is not a valid render engine")
+            raise ValueError(f"{render_engine} is not a valid render engine")
 
     @property
     def output_path(self):
@@ -105,16 +102,16 @@ class RenderSettings:
 
     @output_path.setter
     def output_path(self, path):
-        file_output.base_path = path
+        file_output.base_path = str(path)
 
     @property
     def compression_ratio(self):
-        return file_output.file_slots['image'].format.compression
+        return file_output.file_slots["image"].format.compression
 
     @compression_ratio.setter
     def compression_ratio(self, ratio):
-        file_output.file_slots['image'].format.compression = ratio
-        file_output.file_slots['coordinates'].format.compression = ratio
+        file_output.file_slots["image"].format.compression = ratio
+        file_output.file_slots["coordinates"].format.compression = ratio
 
     @property
     def current_frame(self):
