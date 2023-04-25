@@ -67,6 +67,16 @@ class Ground:
         )
 
 
+class Shadows:
+    def __init__(
+        self,
+        visible: Optional[bool] = None,
+        seed: Optional[int] = None,
+    ) -> None:
+        self.visible = visible or (random() > 0.5)
+        self.seed = seed or randint(0, 1000)
+
+
 class Paper:
     def __init__(
         self,
@@ -175,6 +185,7 @@ class Config:
         project_root: Optional[Union[str, pth]] = None,
         render: Optional[Render] = None,
         ground: Optional[Ground] = None,
+        shadows: Optional[Shadows] = None,
         paper: Optional[Paper] = None,
         folds: Optional[Tuple[Fold, Fold]] = None,
         camera: Optional[Camera] = None,
@@ -185,6 +196,7 @@ class Config:
 
         self.render = render or Render(self.project_root)
         self.ground = ground or Ground(self.project_root)
+        self.shadows = shadows or Shadows()
         self.paper = paper or Paper(self.project_root)
         self.folds = folds or tuple(Fold() for _ in range(2))
         self.camera = camera or Camera()

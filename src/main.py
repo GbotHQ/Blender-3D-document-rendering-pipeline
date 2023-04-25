@@ -25,6 +25,7 @@ import blender_render_settings
 import camera_parameters
 import light_parameters
 import paper_parameters
+import shadow_parameters
 
 # # blender requires a module reload when not running from a command line
 # import importlib
@@ -50,6 +51,10 @@ def generate_and_render(conf: config.Config, output_path: Union[str, pth]):
     ground.replace_texture(conf.ground.albedo_tex, "albedo")
     ground.replace_texture(conf.ground.roughness_tex, "roughness")
     ground.replace_texture(conf.ground.displacement_tex, "depth")
+
+    shadows = shadow_parameters.Shadows()
+    shadows.visible = conf.shadows.visible
+    shadows.seed = conf.shadows.seed
 
     # paper parameters
     paper = paper_parameters.Paper()
