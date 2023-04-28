@@ -73,7 +73,7 @@ class Shadows:
         visible: Optional[bool] = None,
         seed: Optional[int] = None,
     ) -> None:
-        self.visible = visible or (random() > 0.5)
+        self.visible = visible or (random() > 0.4)
         self.seed = seed or randint(0, 1000)
 
 
@@ -142,7 +142,7 @@ class HDRI:
         self.texture_path = str(
             texture_path or pth(project_root, "test_assets", "canary_wharf_2k.exr")
         )
-        self.light_strength = light_strength or uniform(0.02, 0.2)
+        self.light_strength = light_strength or uniform(0.02, 0.3)
         self.backdrop_strength = backdrop_strength or 1.0
         self.rotation = rotation or uniform(0, 360)
 
@@ -169,7 +169,7 @@ class Light:
         )
 
         self.power = power or uniform(500, 900)
-        self.shadow_softness_radius = shadow_softness_radius or uniform(0.1, 0.8)
+        self.shadow_softness_radius = shadow_softness_radius or uniform(0.03, 0.8)
         self.light_cone_angle = light_cone_angle or uniform(30, 90)
 
         self.color = color
