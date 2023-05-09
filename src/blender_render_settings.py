@@ -55,6 +55,7 @@ def enable_gpu():
 
 def change_render_engine_cycles(cycles_device, cycles_samples, cycles_denoise):
     cycles.preview_samples = cycles_samples
+    cycles.samples = cycles_samples
     cycles.use_denoising = cycles_denoise
 
     if cycles_device == "gpu" and not enable_gpu():
