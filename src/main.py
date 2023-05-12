@@ -128,9 +128,10 @@ def generate_and_render(conf: config.Config, output_path: Union[str, pth]):
 
 if __name__ == "__main__":
     samples = [k for k in config_dir.iterdir() if k.is_file() and k.suffix == ".json"]
-    print(f"Generating {len(samples)} samples...")
 
-    for k in samples:
+    for i, k in enumerate(samples):
+        print(f"Generating sample {i+1} of {len(samples)}...")
+
         sample = config.read_config(k)
 
         output_path = output_dir / k.stem
