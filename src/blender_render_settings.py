@@ -15,9 +15,6 @@ scene = data.scenes["Scene"]
 scene_renderer = scene.render
 file_output = scene.node_tree.nodes["File Output"]
 renderer = bpy.ops.render
-hdri_light = data.worlds["World"].node_tree.nodes["Background"]
-hdri_backdrop = data.worlds["World"].node_tree.nodes["Background.001"]
-hdri_image = bpy.data.images["hdri"]
 preferences = bpy.context.preferences
 cycles_preferences = preferences.addons["cycles"].preferences
 cycles = scene.cycles
@@ -121,38 +118,6 @@ class RenderSettings:
     @current_frame.setter
     def current_frame(self, index):
         scene.frame_current = index
-
-    @property
-    def hdri_image_path(self):
-        return hdri_image.filepath
-
-    @hdri_image_path.setter
-    def hdri_image_path(self, path):
-        hdri_image.filepath = path
-
-    @property
-    def hdri_light_strength(self):
-        return hdri_light.inputs[1].default_value
-
-    @hdri_light_strength.setter
-    def hdri_light_strength(self, strength):
-        hdri_light.inputs[1].default_value = strength
-
-    @property
-    def hdri_backdrop_strength(self):
-        return hdri_backdrop.inputs[1].default_value
-
-    @hdri_backdrop_strength.setter
-    def hdri_backdrop_strength(self, strength):
-        hdri_backdrop.inputs[1].default_value = strength
-
-    @property
-    def hdri_image_rotation(self):
-        return math.degrees(scene["hdri_rotation"])
-
-    @hdri_image_rotation.setter
-    def hdri_image_rotation(self, angle):
-        scene["hdri_rotation"] = math.radians(angle)
 
     def render(self):
         renderer.render(layer="View Layer", scene="Scene")

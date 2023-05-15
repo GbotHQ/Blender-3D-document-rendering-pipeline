@@ -22,6 +22,7 @@ import config
 
 import ground_parameters
 import blender_render_settings
+import hdri_parameters
 import camera_parameters
 import light_parameters
 import paper_parameters
@@ -99,13 +100,16 @@ def generate_and_render(conf: config.Config, output_path: Union[str, pth]):
 
         light.color = light_conf.color
 
+    # hdri parameters
+    hdri = hdri_parameters.HDRI()
+
+    hdri.image_path = conf.hdri.texture_path
+    hdri.light_strength = conf.hdri.light_strength
+    hdri.backdrop_strength = conf.hdri.backdrop_strength
+    hdri.seed = conf.hdri.seed
+
     # render settings
     render_settings = blender_render_settings.RenderSettings()
-
-    render_settings.hdri_image_path = conf.hdri.texture_path
-    render_settings.hdri_light_strength = conf.hdri.light_strength
-    render_settings.hdri_backdrop_strength = conf.hdri.backdrop_strength
-    render_settings.hdri_image_rotation = conf.hdri.rotation
 
     # jump to the first frame
     render_settings.current_frame = 1
