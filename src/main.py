@@ -47,6 +47,7 @@ def generate_and_render(conf: config.Config, output_path: Union[str, pth]):
         ground.texture_rotation = conf.ground.texture_rotation
         ground.displacement_strength = conf.ground.displacement_strength
         ground.subdivisions = conf.ground.subdivisions
+        ground.uv_scale = conf.ground.uv_scale
 
     # load textures
     ground.replace_texture(conf.ground.albedo_tex, "albedo")

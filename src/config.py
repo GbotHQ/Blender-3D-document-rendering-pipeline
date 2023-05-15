@@ -43,12 +43,14 @@ class Ground:
         albedo_tex: Optional[Union[str, pth]] = None,
         roughness_tex: Optional[Union[str, pth]] = None,
         displacement_tex: Optional[Union[str, pth]] = None,
+        uv_scale: Optional[float] = None,
     ) -> None:
         self.visible = visible or (random() > 0.3)
         self.offset = offset or uniform(-10, 10)
         self.texture_rotation = texture_rotation or uniform(0, 360)
         self.displacement_strength = displacement_strength or uniform(0.04, 0.2)
         self.subdivisions = subdivisions or 9
+        self.uv_scale = uv_scale or uniform(1.2, 3)
 
         self.texture_path_base = str(
             texture_path_base

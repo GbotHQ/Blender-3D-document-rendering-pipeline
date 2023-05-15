@@ -62,5 +62,13 @@ class Ground:
         self.obj.modifiers["UVWarp"].offset[0] = offset
         self.obj.modifiers["UVWarp"].offset[1] = offset * 2
 
+    @property
+    def uv_scale(self):
+        return self.obj["uv_scale"]
+
+    @uv_scale.setter
+    def uv_scale(self, scale):
+        self.obj["uv_scale"] = scale
+
     def replace_texture(self, path, type):
         textures[type].filepath = path
