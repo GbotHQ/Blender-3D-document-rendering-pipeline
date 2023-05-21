@@ -26,7 +26,7 @@ class Render:
         self.compression_ratio = compression_ratio or 70
         self.render_engine = render_engine or "cycles"
         self.cycles_device = cycles_device or "gpu"
-        self.cycles_samples = cycles_samples or 8
+        self.cycles_samples = cycles_samples or 2
         self.cycles_denoise = cycles_denoise or True
 
 
@@ -44,6 +44,7 @@ class Ground:
         roughness_tex: Optional[Union[str, pth]] = None,
         displacement_tex: Optional[Union[str, pth]] = None,
         uv_scale: Optional[float] = None,
+        texture_seed: Optional[int] = None,
     ) -> None:
         self.visible = visible or (random() > 0.3)
         self.offset = offset or uniform(-10, 10)
@@ -51,6 +52,7 @@ class Ground:
         self.displacement_strength = displacement_strength or uniform(0.04, 0.2)
         self.subdivisions = subdivisions or 9
         self.uv_scale = uv_scale or uniform(1.2, 3)
+        self.texture_seed = texture_seed or randint(0, 10000)
 
         self.texture_path_base = str(
             texture_path_base
@@ -119,15 +121,11 @@ class Camera:
         self,
         focal_length: Optional[int] = None,
         relative_camera_distance: Optional[float] = None,
-        depth_of_field: Optional[bool] = None,
-        fstop: Optional[float] = None,
         orbit: Optional[Tuple[float, float]] = None,
         look_at_2d: Optional[Tuple[int, int]] = None,
     ) -> None:
         self.focal_length = focal_length or randint(24, 135)
         self.relative_camera_distance = relative_camera_distance or 1.3
-        self.depth_of_field = depth_of_field or True
-        self.fstop = fstop or uniform(1, 4)
         self.orbit = orbit or (uniform(0, 25), uniform(0, 360))
         self.look_at_2d = look_at_2d or (0, 0)
 

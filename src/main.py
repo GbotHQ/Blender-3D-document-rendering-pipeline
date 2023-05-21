@@ -48,6 +48,7 @@ def generate_and_render(conf: config.Config, output_path: Union[str, pth]):
         ground.displacement_strength = conf.ground.displacement_strength
         ground.subdivisions = conf.ground.subdivisions
         ground.uv_scale = conf.ground.uv_scale
+        ground.texture_seed = conf.ground.texture_seed
 
     # load textures
     ground.replace_texture(conf.ground.albedo_tex, "albedo")
@@ -78,8 +79,6 @@ def generate_and_render(conf: config.Config, output_path: Union[str, pth]):
 
     camera.focal_length = conf.camera.focal_length
     camera.relative_camera_distance = conf.camera.relative_camera_distance
-    camera.depth_of_field = conf.camera.depth_of_field
-    camera.fstop = conf.camera.fstop
     camera.orbit(*conf.camera.orbit)
     camera.look_at_2d(*conf.camera.look_at_2d)
 
@@ -120,11 +119,11 @@ def generate_and_render(conf: config.Config, output_path: Union[str, pth]):
     render_settings.render_resolution = conf.render.resolution
 
     # change render engine to cycles, change to using specified device and change sampling settings
-    render_settings.change_render_engine(
+    render_settings.set_render_engine(
         conf.render.render_engine,
         conf.render.cycles_device,
         conf.render.cycles_samples,
-        conf.render.cycles_denoise,
+        False,
     )
 
     # render

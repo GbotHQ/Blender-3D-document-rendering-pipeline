@@ -13,13 +13,13 @@ class Camera:
         self.look_at_obj = data.objects["camera_look_at"]
         self._dof_prop = self.obj.dof
 
-    @property
-    def depth_of_field(self):
-        return self._dof_prop.use_dof
+    # @property
+    # def use_depth_of_field(self):
+    #     return self._dof_prop.use_dof
 
-    @depth_of_field.setter
-    def depth_of_field(self, enable):
-        self._dof_prop.use_dof = enable
+    # @use_depth_of_field.setter
+    # def use_depth_of_field(self, enable):
+    #     self._dof_prop.use_dof = enable
 
     @property
     def focal_length(self):
@@ -28,14 +28,15 @@ class Camera:
     @focal_length.setter
     def focal_length(self, focal_length):
         scene["focal_length"] = focal_length
+        data.scenes["Scene"]["focal_length"] = focal_length
 
-    @property
-    def fstop(self):
-        return self._dof_prop.aperture_fstop
+    # @property
+    # def fstop(self):
+    #     return self._dof_prop.aperture_fstop
 
-    @fstop.setter
-    def fstop(self, fstop):
-        self._dof_prop.aperture_fstop = fstop
+    # @fstop.setter
+    # def fstop(self, fstop):
+    #     self._dof_prop.aperture_fstop = fstop
 
     @property
     def relative_camera_distance(self):

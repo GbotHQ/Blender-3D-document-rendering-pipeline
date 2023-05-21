@@ -1,5 +1,3 @@
-import math
-
 import bpy
 
 
@@ -11,13 +9,9 @@ def warn_about_device_fallback(device, device_to_fallback_to):
 
 
 data = bpy.data
-scene = data.scenes["Scene"]
-scene_renderer = scene.render
-file_output = scene.node_tree.nodes["File Output"]
 renderer = bpy.ops.render
 preferences = bpy.context.preferences
 cycles_preferences = preferences.addons["cycles"].preferences
-cycles = scene.cycles
 
 
 def enable_cycles_devices(device_type):
@@ -34,7 +28,7 @@ def enable_cycles_devices(device_type):
     return enabled_device
 
 
-def enable_gpu():
+def enable_cycles_gpu(cycles):
     device = "OPTIX"
     if enable_cycles_devices(device):
         cycles.device = "GPU"
@@ -50,12 +44,12 @@ def enable_gpu():
     return False
 
 
-def change_render_engine_cycles(cycles_device, cycles_samples, cycles_denoise):
+def set_render_engine_cycles(cycles, cycles_device, cycles_samples, cycles_denoise):
     cycles.preview_samples = cycles_samples
     cycles.samples = cycles_samples
     cycles.use_denoising = cycles_denoise
 
-    if cycles_device == "gpu" and not enable_gpu():
+    if cycles_device == "gpu" and not enable_cycles_gpu(cycles):
         cycles_device = "cpu"
 
     if cycles_device == "cpu":
@@ -66,18 +60,20 @@ def change_render_engine_cycles(cycles_device, cycles_samples, cycles_denoise):
 
 class RenderSettings:
     def __init__(self):
-        pass
+        self.scene = data.scenes["Scene"]
+        self.file_output = self.scene.node_tree.nodes["File Output"]
+        self.cycles = self.scene.cycles
 
     @property
     def render_resolution(self):
-        return scene_renderer.resolution_x, scene_renderer.resolution_y
+        return self.scene.render.resolution_x, self.scene.render.resolution_y
 
     @render_resolution.setter
     def render_resolution(self, resolution):
-        scene_renderer.resolution_x = resolution[0]
-        scene_renderer.resolution_y = resolution[1]
+        self.scene.render.resolution_x = resolution[0]
+        self.scene.render.resolution_y = resolution[1]
 
-    def change_render_engine(
+    def set_render_engine(
         self,
         render_engine,
         cycles_device="gpu",
@@ -85,39 +81,41 @@ class RenderSettings:
         cycles_denoise=True,
     ):
         if render_engine == "cycles":
-            change_render_engine_cycles(cycles_device, cycles_samples, cycles_denoise)
-            scene_renderer.engine = "CYCLES"
+            set_render_engine_cycles(
+                self.cycles, cycles_device, cycles_samples, cycles_denoise
+            )
+            self.scene.render.engine = "CYCLES"
         elif render_engine == "eevee":
-            scene_renderer.engine = "BLENDER_EEVEE"
+            self.scene.render.engine = "BLENDER_EEVEE"
         elif render_engine == "workbench":
-            scene_renderer.engine = "BLENDER_WORKBENCH"
+            self.scene.render.engine = "BLENDER_WORKBENCH"
         else:
             raise ValueError(f"{render_engine} is not a valid render engine")
 
     @property
     def output_path(self):
-        return file_output.base_path
+        return self.file_output.base_path
 
     @output_path.setter
     def output_path(self, path):
-        file_output.base_path = str(path)
+        self.file_output.base_path = str(path)
 
     @property
     def compression_ratio(self):
-        return file_output.file_slots["image"].format.compression
+        return self.file_output.file_slots["image"].format.compression
 
     @compression_ratio.setter
     def compression_ratio(self, ratio):
-        file_output.file_slots["image"].format.compression = ratio
-        file_output.file_slots["coordinates"].format.compression = ratio
+        self.file_output.file_slots["image"].format.compression = ratio
+        self.file_output.file_slots["coordinates"].format.compression = ratio
 
     @property
     def current_frame(self):
-        return scene.frame_current
+        return self.scene.frame_current
 
     @current_frame.setter
     def current_frame(self, index):
-        scene.frame_current = index
+        self.scene.frame_current = index
 
     def render(self):
-        renderer.render(layer="View Layer", scene="Scene")
+        renderer.render(scene="Scene")

@@ -70,5 +70,13 @@ class Ground:
     def uv_scale(self, scale):
         self.obj["uv_scale"] = scale
 
+    @property
+    def texture_seed(self):
+        return self.obj["texture_seed"]
+
+    @texture_seed.setter
+    def texture_seed(self, seed):
+        self.obj["texture_seed"] = seed
+
     def replace_texture(self, path, type):
         textures[type].filepath = path
