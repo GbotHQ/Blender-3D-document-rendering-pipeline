@@ -2,10 +2,7 @@ import bpy
 
 
 def warn_about_device_fallback(device, device_to_fallback_to):
-    print(
-        f"Failed to enable {device}, falling back to {device_to_fallback_to}"
-        f""" (when rendering from a command line, use [--engine CYCLES] with [--cycles-device {device}] and ignore this message)"""
-    )
+    print(f"""Failed to enable {device}, falling back to {device_to_fallback_to}""")
 
 
 data = bpy.data
@@ -16,6 +13,8 @@ cycles_preferences = preferences.addons["cycles"].preferences
 
 def enable_cycles_devices(device_type):
     cycles_preferences.compute_device_type = device_type
+
+    cycles_preferences.get_devices()
 
     enabled_device = False
     for device in bpy.context.preferences.addons["cycles"].preferences.devices:
@@ -28,34 +27,34 @@ def enable_cycles_devices(device_type):
     return enabled_device
 
 
-def enable_cycles_gpu(cycles):
-    device = "OPTIX"
-    if enable_cycles_devices(device):
-        cycles.device = "GPU"
-        return True
-    warn_about_device_fallback(device, "CUDA")
+def enable_cycles_gpu(device: str):
+    if device == "OPTIX":
+        if enable_cycles_devices(device):
+            return True
+        warn_about_device_fallback(device, "CUDA")
 
     device = "CUDA"
     if enable_cycles_devices(device):
-        cycles.device = "GPU"
         return True
     warn_about_device_fallback(device, "CPU")
 
     return False
 
 
-def set_render_engine_cycles(cycles, cycles_device, cycles_samples, cycles_denoise):
-    cycles.preview_samples = cycles_samples
-    cycles.samples = cycles_samples
-    cycles.use_denoising = cycles_denoise
+def set_render_engine_cycles(cycles, device, samples, denoise):
+    cycles.preview_samples = samples
+    cycles.samples = samples
+    cycles.use_denoising = denoise
 
-    if cycles_device == "gpu" and not enable_cycles_gpu(cycles):
-        cycles_device = "cpu"
+    if device not in ["CPU", "CUDA", "OPTIX"]:
+        raise ValueError(f"{device} is not a valid device")
 
-    if cycles_device == "cpu":
-        cycles.device = "CPU"
-    elif cycles_device != "gpu":
-        raise ValueError(f"{cycles_device} is not a valid device")
+    if device in ["OPTIX", "CUDA"]:
+        enable_cycles_gpu(device)
+        cycles.device = "GPU"
+        return
+
+    cycles.device = "CPU"
 
 
 class RenderSettings:

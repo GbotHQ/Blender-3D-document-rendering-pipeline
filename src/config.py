@@ -25,7 +25,7 @@ class Render:
         self.resolution = resolution or (1024, 1024)
         self.compression_ratio = compression_ratio or 70
         self.render_engine = render_engine or "cycles"
-        self.cycles_device = cycles_device or "gpu"
+        self.cycles_device = cycles_device or "CUDA"
         self.cycles_samples = cycles_samples or 2
         self.cycles_denoise = cycles_denoise or True
 
@@ -182,6 +182,7 @@ class Light:
 class Config:
     def __init__(
         self,
+        cycles_device: str = "CUDA",
         project_root: Optional[Union[str, pth]] = None,
         render: Optional[Render] = None,
         ground: Optional[Ground] = None,
@@ -194,7 +195,7 @@ class Config:
     ) -> None:
         self.project_root = str(pth(project_root or pth.cwd()).resolve())
 
-        self.render = render or Render(self.project_root)
+        self.render = render or Render(self.project_root, cycles_device=cycles_device)
         self.ground = ground or Ground(self.project_root)
         self.shadows = shadows or Shadows()
         self.paper = paper or Paper(self.project_root)
