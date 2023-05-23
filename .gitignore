@@ -1,5 +1,5 @@
 config/*
 src/test.ipynb
 src/__pycache__
-renders/*
+output/*
 *.blend1

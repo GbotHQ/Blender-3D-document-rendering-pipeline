@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
         sample = config.read_config(k)
 
-        output_path = output_dir / k.stem
+        output_path = pth(sample.render.output_dir) / k.stem
 
         if output_path.is_dir():
             shutil.rmtree(output_path)

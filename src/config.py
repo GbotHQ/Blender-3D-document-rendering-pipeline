@@ -1,6 +1,6 @@
+from typing import Union, Tuple, Optional, Dict
 import random as rng
 from random import random, uniform, randint
-from typing import Union, Tuple, Optional
 import json
 
 from pathlib import Path as pth
@@ -15,6 +15,7 @@ class Render:
     def __init__(
         self,
         project_root: Union[str, pth],
+        output_dir: Optional[Union[str, pth]] = None,
         resolution: Optional[Tuple[int, int]] = None,
         compression_ratio: Optional[int] = None,
         render_engine: Optional[str] = None,
@@ -22,6 +23,7 @@ class Render:
         cycles_samples: Optional[int] = None,
         cycles_denoise: Optional[bool] = None,
     ) -> None:
+        self.output_dir = str(output_dir or (pth(project_root) / "output"))
         self.resolution = resolution or (1024, 1024)
         self.compression_ratio = compression_ratio or 70
         self.render_engine = render_engine or "cycles"
@@ -232,22 +234,19 @@ class Config:
 
         return to_dict_recursive(self)
 
-    def from_dict(self, dictionary) -> "Config":
-        def from_dict_recursive(obj, dictionary) -> Any:
+    def from_dict(self: "Config", dictionary: Dict[str, Any]) -> "Config":
+        def from_dict_recursive(obj: Any, dict_: Dict[str, Any]) -> Any:
             if not hasattr(obj, "__dict__"):
-                return dictionary
+                return dict_
 
             obj_dict = obj.__dict__
-            for key in obj_dict:
-                for k in (tuple, list):
-                    if isinstance(obj_dict[key], k):
-                        obj_dict[key] = k(
-                            from_dict_recursive(k, l)
-                            for k, l in zip(obj_dict[key], dictionary[key])
-                        )
-                        break
+            for key, value in obj_dict.items():
+                if isinstance(value, (list, tuple)):
+                    obj_dict[key] = type(value)(
+                        from_dict_recursive(v, d) for v, d in zip(value, dict_[key])
+                    )
                 else:
-                    obj_dict[key] = from_dict_recursive(obj_dict[key], dictionary[key])
+                    obj_dict[key] = from_dict_recursive(value, dict_[key])
 
             obj.__dict__ = obj_dict
             return obj
