@@ -1,5 +1,6 @@
 from typing import Union
 import sys
+import argparse
 
 from pathlib import Path as pth
 from pathlib import PurePath as ppth
@@ -8,10 +9,14 @@ import shutil
 
 import bpy
 
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--config_path")
+
+
 blend_dir = pth(bpy.data.filepath).parent
 project_dir = (blend_dir / "..").resolve()
 src_dir = project_dir / "src"
-config_dir = project_dir / "config"
 output_dir = project_dir / "renders"
 
 # add src to python path so that python can do imports
@@ -131,7 +136,19 @@ def generate_and_render(conf: config.Config, output_path: Union[str, pth]):
 
 
 if __name__ == "__main__":
-    samples = [k for k in config_dir.iterdir() if k.is_file() and k.suffix == ".json"]
+    args, unknown = parser.parse_known_args(sys.argv[14:])
+
+    config_path = pth(args.config_path)
+
+    if not config_path.is_absolute():
+        raise FileNotFoundError(f"Config path {config_path} is not absolute")
+
+    config_path = config_path.resolve()
+
+    if not config_path.is_dir():
+        raise FileNotFoundError(f"Config path {config_path} is not a directory")
+
+    samples = [k for k in config_path.iterdir() if k.is_file() and k.suffix == ".json"]
 
     for i, k in enumerate(samples):
         print(f"Generating sample {i+1} of {len(samples)}...")
