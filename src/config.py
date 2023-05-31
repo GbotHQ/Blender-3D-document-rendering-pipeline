@@ -17,7 +17,7 @@ class Render:
         project_root: Union[str, pth],
         output_dir: Optional[Union[str, pth]] = None,
         resolution: Optional[Tuple[int, int]] = None,
-        jpeg_quality: Optional[int] = None,
+        compression_ratio: Optional[int] = None,
         render_engine: Optional[str] = None,
         cycles_device: Optional[str] = None,
         cycles_samples: Optional[int] = None,
@@ -25,7 +25,7 @@ class Render:
     ) -> None:
         self.output_dir = str(output_dir or (pth(project_root) / "output"))
         self.resolution = resolution or (1024, 1024)
-        self.jpeg_quality = jpeg_quality or 95
+        self.compression_ratio = compression_ratio or 70
         self.render_engine = render_engine or "cycles"
         self.cycles_device = cycles_device or "CUDA"
         self.cycles_samples = cycles_samples or 2

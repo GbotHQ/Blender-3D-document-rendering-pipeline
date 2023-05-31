@@ -100,13 +100,13 @@ class RenderSettings:
         self.file_output.base_path = str(path)
 
     @property
-    def jpeg_quality(self):
+    def compression_ratio(self):
         return self.file_output.file_slots["image"].format.compression
 
-    @jpeg_quality.setter
-    def jpeg_quality(self, ratio):
+    @compression_ratio.setter
+    def compression_ratio(self, ratio):
         self.file_output.file_slots["image"].format.compression = ratio
-        # self.file_output.file_slots["coordinates"].format.compression = ratio
+        self.file_output.file_slots["coordinates"].format.compression = ratio
 
     @property
     def current_frame(self):
