@@ -120,7 +120,7 @@ def generate_and_render(conf: config.Config, output_path: Union[str, pth]):
     render_settings.current_frame = 1
 
     render_settings.output_path = output_path
-    render_settings.compression_ratio = conf.render.compression_ratio
+    render_settings.jpeg_quality = conf.render.jpeg_quality
     render_settings.render_resolution = conf.render.resolution
 
     # change render engine to cycles, change to using specified device and change sampling settings
